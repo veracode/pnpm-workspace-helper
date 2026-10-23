@@ -30,21 +30,46 @@ const workspaces = require(program.folder+'/package.json').workspaces;
 console.log(chalk.green(`\n## Running on ${program.folder}...`));
 console.log(chalk.green(`\n## Workspaces: ${JSON.stringify(workspaces)}`));
 
-// Read the .npmrc file and find all registry entries that start with @
-const npmrc = fs.readFileSync(`${program.folder}/.npmrc`, 'utf8');
-const registryEntries = npmrc.match(/^@.*registry=.*$/gm);
 
+// Read the .npmrc file and find all registry entries that start with @
 var registryName: string[] = [];
-if (registryEntries) {
-    registryEntries.forEach((entry, index) => {
-        const registryUrl = entry.split(':')[0];
-        console.log(chalk.green(`\n## found internal registry on .mpmrc: ${registryUrl}`));
-        registryName.push(registryUrl);
-    });
+if (fileExists(`${program.folder}/.npmrc`)) {
+    const npmrc = fs.readFileSync(`${program.folder}/.npmrc`, 'utf8');
+    const registryEntries = npmrc.match(/^@.*registry=.*$/gm);
+
+    if (registryEntries) {
+        registryEntries.forEach((entry, index) => {
+            const registryUrl = entry.split(':')[0];
+            console.log(chalk.green(`\n## found internal registry on .npmrc: ${registryUrl}`));
+            registryName.push(registryUrl);
+        });
+    } else {
+        console.log(chalk.yellow('No registry entries found in .npmrc file.'));
+    }
 } else {
-    console.log(chalk.red('No registry entries found in .npmrc file.'));
+    console.log(chalk.yellow('.npmrc file not found, skipping internal registry detection.'));
 }
 
+
+var registryName: string[] = [];
+// Read the .npmrc file and find all registry entries that start with @
+var registryName: string[] = [];
+if (fileExists(`${program.folder}/.npmrc`)) {
+    const npmrc = fs.readFileSync(`${program.folder}/.npmrc`, 'utf8');
+    const registryEntries = npmrc.match(/^@.*registry=.*$/gm);
+
+    if (registryEntries) {
+        registryEntries.forEach((entry, index) => {
+            const registryUrl = entry.split(':')[0];
+            console.log(chalk.green(`\n## found internal registry on .npmrc: ${registryUrl}`));
+            registryName.push(registryUrl);
+        });
+    } else {
+        console.log(chalk.yellow('No registry entries found in .npmrc file.'));
+    }
+} else {
+    console.log(chalk.yellow('.npmrc file not found, skipping internal registry detection.'));
+}
 
 function findSubfolders(folderPath) {
     try {
