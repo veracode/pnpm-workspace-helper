@@ -51,26 +51,6 @@ if (fileExists(`${program.folder}/.npmrc`)) {
 }
 
 
-var registryName: string[] = [];
-// Read the .npmrc file and find all registry entries that start with @
-var registryName: string[] = [];
-if (fileExists(`${program.folder}/.npmrc`)) {
-    const npmrc = fs.readFileSync(`${program.folder}/.npmrc`, 'utf8');
-    const registryEntries = npmrc.match(/^@.*registry=.*$/gm);
-
-    if (registryEntries) {
-        registryEntries.forEach((entry, index) => {
-            const registryUrl = entry.split(':')[0];
-            console.log(chalk.green(`\n## found internal registry on .npmrc: ${registryUrl}`));
-            registryName.push(registryUrl);
-        });
-    } else {
-        console.log(chalk.yellow('No registry entries found in .npmrc file.'));
-    }
-} else {
-    console.log(chalk.yellow('.npmrc file not found, skipping internal registry detection.'));
-}
-
 function findSubfolders(folderPath) {
     try {
         // Read the contents of the folder
